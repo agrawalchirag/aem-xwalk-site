@@ -241,9 +241,17 @@
       },
       {
         "component": "select",
-        "name": "headingType",
+        "name": "showAsHeadingType",
         "label": "Heading type",
         "valueType": "string",
+        "condition": {
+          "===": [
+            {
+              "var": "showAsHeading"
+            },
+            true
+          ]
+        },
         "options": [
           {
             "name": "h1",

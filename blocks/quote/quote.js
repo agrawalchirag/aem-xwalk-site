@@ -1,10 +1,12 @@
 export default function decorate(block) {
   const [quoteWrapper, authorWrapper] = block.children;
-  
+
   // Check if quote should be rendered as heading
   const showAsHeading = block.classList.contains('show-as-heading');
   const headingTypes = ['h1', 'h2', 'h3', 'h4', 'h5', 'h6'];
-  const headingType = headingTypes.find((type) => block.classList.contains(type)) || 'h2';
+
+  // Check for showAsHeadingType classes (e.g., show-as-heading-type-h2)
+  const headingType = headingTypes.find((type) => block.classList.contains(`show-as-heading-type-${type}`)) || 'h2';
 
   if (showAsHeading) {
     // Render as heading
