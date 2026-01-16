@@ -2,7 +2,8 @@
   "mappings": [
     "/content/aem-xwalk-site/:/",
     "/content/aem-xwalk-site/configuration:/.helix/config.json",
-    "/content/aem-xwalk-site/metadata:/metadata.json"
+    "/content/aem-xwalk-site/metadata:/metadata.json",
+    "/content/aem-xwalk-site/taxonomy:/taxonomy.json"
   ],
   "includes": [
     "/content/aem-xwalk-site/"
