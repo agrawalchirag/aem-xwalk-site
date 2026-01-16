@@ -33,6 +33,12 @@
           "valueType": "string"
         },
         {
+          "component": "aem-tag",
+          "name": "tag",
+          "label": "Tag",
+          "valueType": "string"
+        },
+        {
           "component": "boolean",
           "name": "showAsHeading",
           "label": "Show quote as heading",
@@ -80,5 +86,6 @@
         }
       ]
     }
-  ]
+  ],
+  "filters": []
 }

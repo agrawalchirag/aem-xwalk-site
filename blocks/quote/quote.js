@@ -9,6 +9,15 @@ async function fetchTaxonomy() {
     const response = await fetch('/taxonomy.json');
     if (!response.ok) return null;
     const json = await response.json();
+    
+    // Handle multi-sheet format
+    if (json[':type'] === 'multi-sheet') {
+      // Try to get the current language sheet, fallback to 'default' or 'en'
+      const lang = document.documentElement.lang || 'en';
+      return json[lang] || json.default || json.en;
+    }
+    
+    // Handle single-sheet format (backward compatibility)
     return json;
   } catch (error) {
     return null;
@@ -18,11 +27,11 @@ async function fetchTaxonomy() {
 /**
  * Gets the translated tag title from taxonomy
  * @param {string} tagValue The tag value (e.g., "quote:motivational")
- * @param {object} taxonomy The taxonomy data
+ * @param {object} taxonomy The taxonomy sheet data
  * @returns {string} The translated tag title
  */
 function getTagTitle(tagValue, taxonomy) {
-  if (!taxonomy || !tagValue) return '';
+  if (!taxonomy || !taxonomy.data || !tagValue) return '';
   const tagData = taxonomy.data.find((item) => item.tag === tagValue);
   return tagData ? tagData.title : '';
 }
