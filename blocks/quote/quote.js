@@ -9,6 +9,7 @@ async function fetchTaxonomy() {
     const response = await fetch('/taxonomy.json');
     if (!response.ok) return null;
     const json = await response.json();
+    console.log('Fetched taxonomy.json', json);
 
     // Handle multi-sheet format
     if (json[':type'] === 'multi-sheet') {
@@ -31,27 +32,21 @@ async function fetchTaxonomy() {
  * @returns {string} The translated tag title
  */
 function getTagTitle(tagValue, taxonomy) {
+  console.log('Getting tag title for', tagValue, taxonomy);
   if (!taxonomy || !taxonomy.data || !tagValue) return '';
   const tagData = taxonomy.data.find((item) => item.tag === tagValue);
   return tagData ? tagData.title : '';
 }
 
 export default async function decorate(block) {
-  const [quoteWrapper, authorWrapper] = block.children;
+  const [quoteWrapper, authorWrapper, tagWrapper, showAsHeadingWrapper, headingTypeWrapper] = block.children;
 
   if (!quoteWrapper) return;
 
-  // Check if quote should be rendered as heading
-  const showAsHeading = block.classList.contains('show-as-heading');
-  const headingTypes = ['h1', 'h2', 'h3', 'h4', 'h5', 'h6'];
-
-  // Find selected heading type from classes, default to h5
-  let headingType = 'h5';
-  headingTypes.forEach((type) => {
-    if (block.classList.contains(type)) {
-      headingType = type;
-    }
-  });
+  // Get field values
+  const tagValue = tagWrapper?.textContent?.trim();
+  const showAsHeading = showAsHeadingWrapper?.textContent?.trim() === 'true';
+  const headingType = headingTypeWrapper?.textContent?.trim() || 'h5';
 
   if (showAsHeading) {
     // Render as heading
@@ -73,20 +68,23 @@ export default async function decorate(block) {
     authorWrapper.replaceChildren(author);
   }
 
-  // Fetch tag from block classes and render translated tag
-  const taxonomy = await fetchTaxonomy();
-  const tagClasses = [...block.classList].filter((cls) => cls.startsWith('tag-'));
-  if (tagClasses.length > 0 && taxonomy) {
-    // Convert class like "tag-quote-motivational" to "quote:motivational"
-    const tagClass = tagClasses[0];
-    const tagValue = tagClass.replace('tag-', '').replace(/-/g, ':');
-    const tagTitle = getTagTitle(tagValue, taxonomy);
+  // Remove field value wrappers
+  tagWrapper?.remove();
+  showAsHeadingWrapper?.remove();
+  headingTypeWrapper?.remove();
 
-    if (tagTitle) {
-      const tagElement = document.createElement('span');
-      tagElement.className = 'quote-tag';
-      tagElement.textContent = tagTitle;
-      block.appendChild(tagElement);
+  // Fetch tag from taxonomy and render translated tag
+  if (tagValue) {
+    const taxonomy = await fetchTaxonomy();
+    if (taxonomy) {
+      const tagTitle = getTagTitle(tagValue, taxonomy);
+
+      if (tagTitle) {
+        const tagElement = document.createElement('span');
+        tagElement.className = 'quote-tag';
+        tagElement.textContent = tagTitle;
+        block.appendChild(tagElement);
+      }
     }
   }
 
