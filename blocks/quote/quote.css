@@ -28,3 +28,27 @@
   width: 30px;
   background-color: darkgray;
 }
+
+.quote-tag {
+  display: inline-block;
+  background-color: #2680eb;
+  color: white;
+  padding: 4px 12px;
+  border-radius: 16px;
+  font-size: 12px;
+  font-weight: 600;
+  margin: 8px 16px;
+  text-transform: uppercase;
+}
+
+.quote-author {
+  margin: 0 16px;
+  font-size: small;
+  font-style: italic;
+}
+
+.quote-suffix {
+  margin: 8px 16px 0;
+  font-size: small;
+  color: #666;
+}

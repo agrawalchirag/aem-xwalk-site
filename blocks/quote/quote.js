@@ -1,5 +1,32 @@
 import { getPlaceholder } from '../../scripts/placeholders.js';
 
+/**
+ * Fetches taxonomy data
+ * @returns {Promise<object>} Taxonomy data with tag mappings
+ */
+async function fetchTaxonomy() {
+  try {
+    const response = await fetch('/taxonomy.json');
+    if (!response.ok) return null;
+    const json = await response.json();
+    return json;
+  } catch (error) {
+    return null;
+  }
+}
+
+/**
+ * Gets the translated tag title from taxonomy
+ * @param {string} tagValue The tag value (e.g., "quote:motivational")
+ * @param {object} taxonomy The taxonomy data
+ * @returns {string} The translated tag title
+ */
+function getTagTitle(tagValue, taxonomy) {
+  if (!taxonomy || !tagValue) return '';
+  const tagData = taxonomy.data.find((item) => item.tag === tagValue);
+  return tagData ? tagData.title : '';
+}
+
 export default async function decorate(block) {
   const [quoteWrapper, authorWrapper] = block.children;
 
@@ -35,6 +62,23 @@ export default async function decorate(block) {
     author.className = 'quote-author';
     author.textContent = authorWrapper.textContent.trim();
     authorWrapper.replaceChildren(author);
+  }
+
+  // Fetch tag from block classes and render translated tag
+  const taxonomy = await fetchTaxonomy();
+  const tagClasses = [...block.classList].filter((cls) => cls.startsWith('tag-'));
+  if (tagClasses.length > 0 && taxonomy) {
+    // Convert class like "tag-quote-motivational" to "quote:motivational"
+    const tagClass = tagClasses[0];
+    const tagValue = tagClass.replace('tag-', '').replace(/-/g, ':');
+    const tagTitle = getTagTitle(tagValue, taxonomy);
+
+    if (tagTitle) {
+      const tagElement = document.createElement('span');
+      tagElement.className = 'quote-tag';
+      tagElement.textContent = tagTitle;
+      block.appendChild(tagElement);
+    }
   }
 
   // Add "Quote of the day" suffix from placeholders

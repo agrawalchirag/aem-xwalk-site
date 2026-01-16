@@ -221,27 +221,30 @@
       {
         "component": "richtext",
         "name": "quote",
-        "value": "",
         "label": "Quote",
         "valueType": "string"
       },
       {
         "component": "text",
-        "valueType": "string",
         "name": "author",
         "label": "Author",
-        "value": ""
+        "valueType": "string"
+      },
+      {
+        "component": "aem-tag",
+        "name": "tag",
+        "label": "Tag",
+        "valueType": "string"
       },
       {
         "component": "boolean",
         "name": "showAsHeading",
         "label": "Show quote as heading",
-        "valueType": "boolean",
-        "value": false
+        "valueType": "boolean"
       },
       {
         "component": "select",
-        "name": "showAsHeadingType",
+        "name": "headingType",
         "label": "Heading type",
         "valueType": "string",
         "condition": {
