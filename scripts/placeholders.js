@@ -2,18 +2,6 @@
  * Placeholders utility for fetching localized text
  */
 
-const CAMEL_CASE_REGEX = /([a-z0-9])([A-Z])/g;
-const CAMEL_CASE_REPLACEMENT = '$1-$2';
-
-/**
- * Converts camelCase string to kebab-case
- * @param {string} str
- * @returns {string}
- */
-function toKebabCase(str) {
-  return str.replace(CAMEL_CASE_REGEX, CAMEL_CASE_REPLACEMENT).toLowerCase();
-}
-
 /**
  * Converts kebab-case/snake_case to camelCase
  * @param {string} str
@@ -30,11 +18,11 @@ function toCamelCase(str) {
  */
 export async function fetchPlaceholders(prefix = 'default') {
   window.placeholders = window.placeholders || {};
-  
+
   if (!window.placeholders[prefix]) {
     window.placeholders[prefix] = new Promise((resolve) => {
       const placeholdersPath = prefix === 'default' ? '/placeholders.json' : `${prefix}/placeholders.json`;
-      
+
       fetch(placeholdersPath)
         .then((resp) => {
           if (resp.ok) {
@@ -59,7 +47,7 @@ export async function fetchPlaceholders(prefix = 'default') {
         });
     });
   }
-  
+
   return window.placeholders[prefix];
 }
 
