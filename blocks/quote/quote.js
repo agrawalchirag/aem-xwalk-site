@@ -1,4 +1,6 @@
-export default function decorate(block) {
+import { getPlaceholder } from '../../scripts/placeholders.js';
+
+export default async function decorate(block) {
   const [quoteWrapper, authorWrapper] = block.children;
 
   if (!quoteWrapper) return;
@@ -33,5 +35,14 @@ export default function decorate(block) {
     author.className = 'quote-author';
     author.textContent = authorWrapper.textContent.trim();
     authorWrapper.replaceChildren(author);
+  }
+
+  // Add "Quote of the day" suffix from placeholders
+  const quoteOfTheDayText = await getPlaceholder('quote-of-the-day');
+  if (quoteOfTheDayText) {
+    const suffix = document.createElement('p');
+    suffix.className = 'quote-suffix';
+    suffix.textContent = quoteOfTheDayText;
+    block.appendChild(suffix);
   }
 }
